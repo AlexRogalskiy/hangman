@@ -31,7 +31,7 @@ public class InteractiveGameSessionTest {
 
         interactiveGameSession.start();
 
-        assertTrue(getOutput().endsWith("s*** Attempts left: 7\n"), "Unexpected output " + getOutput());
+        assertTrue(getOutput().endsWith("s*** Attempts left: 7. Used letters: s\n"), "Unexpected output " + getOutput());
     }
 
     @Test
@@ -42,10 +42,10 @@ public class InteractiveGameSessionTest {
 
         //language=TEXT
         String expectedOutput = "****\n" +
-                "s*** Attempts left: 7\n" +
-                "so** Attempts left: 7\n" +
-                "sof* Attempts left: 7\n" +
-                "sofa Attempts left: 7\n" +
+                "s*** Attempts left: 7. Used letters: s\n" +
+                "so** Attempts left: 7. Used letters: s, o\n" +
+                "sof* Attempts left: 7. Used letters: s, o, f\n" +
+                "sofa Attempts left: 7. Used letters: s, o, f, a\n" +
                 "Congratulation, you won the game. The secret word: \"sofa\"\n";
 
         assertEquals(expectedOutput, getOutput());
@@ -66,13 +66,13 @@ public class InteractiveGameSessionTest {
 
         //language=TEXT
         String expectedOutput = "****\n" +
-                "**** Attempts left: 6\n" +
-                "**** Attempts left: 5\n" +
-                "**** Attempts left: 4\n" +
-                "**** Attempts left: 3\n" +
-                "**** Attempts left: 2\n" +
-                "**** Attempts left: 1\n" +
-                "**** Attempts left: 0\n" +
+                "**** Attempts left: 6. Used letters: z\n" +
+                "**** Attempts left: 5. Used letters: z, x\n" +
+                "**** Attempts left: 4. Used letters: z, x, c\n" +
+                "**** Attempts left: 3. Used letters: z, x, c, q\n" +
+                "**** Attempts left: 2. Used letters: z, x, c, q, e\n" +
+                "**** Attempts left: 1. Used letters: z, x, c, q, e, r\n" +
+                "**** Attempts left: 0. Used letters: z, x, c, q, e, r, i\n" +
                 "You have lost the game" +
                 ". The secret word: \"sofa\"\n";
 

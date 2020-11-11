@@ -1,13 +1,14 @@
 package ru.hse.sc.hangman;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class Hangman {
     private static final int MAX_ATTEMPTS = 7;
 
     private final String secretWord;
-    private final Set<Character> usedLetters = new HashSet<>();
+    private final Set<Character> usedLetters = new LinkedHashSet<>();
     private int attemptsLeft = MAX_ATTEMPTS;
 
     public Hangman(String secretWord) {
@@ -79,5 +80,9 @@ public class Hangman {
 
     public String getSecretWord() {
         return secretWord;
+    }
+
+    public Set<Character> getUsedLetters() {
+        return usedLetters;
     }
 }

@@ -30,13 +30,26 @@ public class InteractiveGameSession {
         while (scanner.hasNext()) {
             String next = scanner.next();
             hangman.guessLetter(next.charAt(0));
-            output.println(hangman.getMaskedWord() + " Attempts left: " + hangman.getAttemptsLeft());
+            output.println(hangman.getMaskedWord() + " Attempts left: " + hangman.getAttemptsLeft() + ". Used letters: " + joinLetters());
             if (hangman.isEnded()) {
                 endGame();
                 return;
             }
             output.flush();
         }
+    }
+
+    private String joinLetters() {
+        StringBuilder stringBuilder = new StringBuilder();
+        boolean first = true;
+        for (Character letter : hangman.getUsedLetters()) {
+            if (!first) {
+                stringBuilder.append(", ");
+            }
+            stringBuilder.append(letter);
+            first = false;
+        }
+        return stringBuilder.toString();
     }
 
     private void endGame() {
