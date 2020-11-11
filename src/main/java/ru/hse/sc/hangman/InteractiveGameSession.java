@@ -1,16 +1,20 @@
 package ru.hse.sc.hangman;
 
 import java.io.PrintStream;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 public class InteractiveGameSession {
-    private final Hangman hangman;
+    private final List<String> words;
     private final Scanner scanner;
     private final PrintStream output;
+    private final Random random;
 
-    public InteractiveGameSession(Hangman hangman, Scanner scanner, PrintStream output) {
-        if (hangman == null) {
-            throw new IllegalArgumentException("hangman == null");
+    public InteractiveGameSession(List<String> words, Scanner scanner, PrintStream output, Random random) {
+        if (words == null) {
+            throw new IllegalArgumentException("words == null");
         }
         if (scanner == null) {
             throw new IllegalArgumentException("scanner == null");
@@ -18,31 +22,46 @@ public class InteractiveGameSession {
         if (output == null) {
             throw new IllegalArgumentException("output == null");
         }
-        this.hangman = hangman;
+        if (random == null) {
+            throw new IllegalArgumentException("random == null");
+        }
+        this.words = words;
         this.scanner = scanner;
-
+        this.random = random;
         this.output = output;
     }
 
-    public void start() {
+    public void playIndefinitely() {
+        do {
+            playNewGame();
+        } while (scanner.hasNext());
+    }
+
+    private void playNewGame() {
+        Hangman hangman = new Hangman(randomWord());
         output.println(hangman.getMaskedWord());
-        output.flush();
         while (scanner.hasNext()) {
             String next = scanner.next();
             hangman.guessLetter(next.charAt(0));
-            output.println(hangman.getMaskedWord() + " Attempts left: " + hangman.getAttemptsLeft() + ". Used letters: " + joinLetters());
+            output.println(hangman.getMaskedWord() +
+                    " Attempts left: " + hangman.getAttemptsLeft() +
+                    ". Used letters: " + joinLetters(hangman.getUsedLetters()));
             if (hangman.isEnded()) {
-                endGame();
+                endGame(hangman);
                 return;
             }
-            output.flush();
         }
     }
 
-    private String joinLetters() {
+    private String randomWord() {
+        int i = random.nextInt(words.size());
+        return words.get(i);
+    }
+
+    private String joinLetters(Set<Character> letters) {
         StringBuilder stringBuilder = new StringBuilder();
         boolean first = true;
-        for (Character letter : hangman.getUsedLetters()) {
+        for (Character letter : letters) {
             if (!first) {
                 stringBuilder.append(", ");
             }
@@ -52,7 +71,7 @@ public class InteractiveGameSession {
         return stringBuilder.toString();
     }
 
-    private void endGame() {
+    private void endGame(Hangman hangman) {
         if (hangman.isWon()) {
             output.println("Congratulation, you won the game. The secret word: \"" + hangman.getMaskedWord() + "\"");
         } else {

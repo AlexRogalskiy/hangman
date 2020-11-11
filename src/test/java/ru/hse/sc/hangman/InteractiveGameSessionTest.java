@@ -5,14 +5,15 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class InteractiveGameSessionTest {
 
-    private final Hangman hangman = new Hangman("sofa");
     private final ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     private final PrintStream output = new PrintStream(outputBytes);
 
@@ -20,7 +21,7 @@ public class InteractiveGameSessionTest {
     void whenGameStartedMaskedWordIsPrinted() {
         InteractiveGameSession interactiveGameSession = newGame("");
 
-        interactiveGameSession.start();
+        interactiveGameSession.playIndefinitely();
 
         assertTrue(getOutput().startsWith("****"));
     }
@@ -29,7 +30,7 @@ public class InteractiveGameSessionTest {
     void whenLetterGuessedMaskedWordIsPrintedAsWellAsAttemptsLeft() {
         InteractiveGameSession interactiveGameSession = newGame("s\n");
 
-        interactiveGameSession.start();
+        interactiveGameSession.playIndefinitely();
 
         assertTrue(getOutput().endsWith("s*** Attempts left: 7. Used letters: s\n"), "Unexpected output " + getOutput());
     }
@@ -38,7 +39,7 @@ public class InteractiveGameSessionTest {
     void gameSuccessfullyWon() {
         InteractiveGameSession session = newGame("s\no\nf\na");
 
-        session.start();
+        session.playIndefinitely();
 
         //language=TEXT
         String expectedOutput = "****\n" +
@@ -62,7 +63,7 @@ public class InteractiveGameSessionTest {
                 "r\n" +
                 "i");
 
-        session.start();
+        session.playIndefinitely();
 
         //language=TEXT
         String expectedOutput = "****\n" +
@@ -79,11 +80,43 @@ public class InteractiveGameSessionTest {
         assertEquals(expectedOutput, getOutput());
     }
 
+    @Test
+    void gameIsRestarted() {
+        //language=TEXT
+        InteractiveGameSession session = newGame("s\n" +
+                "o\n" +
+                "f\n" +
+                "a\n" +
+                "s\n" +
+                "o\n" +
+                "f\n" +
+                "a");
+
+        session.playIndefinitely();
+
+        //language=TEXT
+        String expectedOutput =
+                "****\n" +
+                "s*** Attempts left: 7. Used letters: s\n" +
+                "so** Attempts left: 7. Used letters: s, o\n" +
+                "sof* Attempts left: 7. Used letters: s, o, f\n" +
+                "sofa Attempts left: 7. Used letters: s, o, f, a\n" +
+                "Congratulation, you won the game. The secret word: \"sofa\"\n" +
+                "****\n" +
+                "s*** Attempts left: 7. Used letters: s\n" +
+                "so** Attempts left: 7. Used letters: s, o\n" +
+                "sof* Attempts left: 7. Used letters: s, o, f\n" +
+                "sofa Attempts left: 7. Used letters: s, o, f, a\n" +
+                "Congratulation, you won the game. The secret word: \"sofa\"\n";
+
+        assertEquals(expectedOutput, getOutput());
+    }
+
     private String getOutput() {
         return outputBytes.toString(StandardCharsets.UTF_8);
     }
 
     private InteractiveGameSession newGame(String input) {
-        return new InteractiveGameSession(hangman, new Scanner(input), output);
+        return new InteractiveGameSession(List.of("sofa"), new Scanner(input), output, ThreadLocalRandom.current());
     }
 }
