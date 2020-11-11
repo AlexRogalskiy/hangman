@@ -16,6 +16,9 @@ public class InteractiveGameSession {
         if (words == null) {
             throw new IllegalArgumentException("words == null");
         }
+        if (words.isEmpty()) {
+            throw new IllegalArgumentException("words is empty");
+        }
         if (scanner == null) {
             throw new IllegalArgumentException("scanner == null");
         }
@@ -32,12 +35,20 @@ public class InteractiveGameSession {
     }
 
     public void playIndefinitely() {
+        Hangman hangman;
         do {
-            playNewGame();
-        } while (scanner.hasNext());
+            hangman = playNewGame();
+        } while (wantsToPlay(hangman));
     }
 
-    private void playNewGame() {
+    private boolean wantsToPlay(Hangman hangman) {
+        if (hangman.isEnded()) {
+            output.println("Play again? (y/n)");
+        }
+        return scanner.hasNext() && scanner.next().startsWith("y");
+    }
+
+    private Hangman playNewGame() {
         Hangman hangman = new Hangman(randomWord());
         output.println(hangman.getMaskedWord());
         while (scanner.hasNext()) {
@@ -48,9 +59,10 @@ public class InteractiveGameSession {
                     ". Used letters: " + joinLetters(hangman.getUsedLetters()));
             if (hangman.isEnded()) {
                 endGame(hangman);
-                return;
+                return hangman;
             }
         }
+        return hangman;
     }
 
     private String randomWord() {

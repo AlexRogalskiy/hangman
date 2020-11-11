@@ -37,7 +37,7 @@ public class InteractiveGameSessionTest {
 
     @Test
     void gameSuccessfullyWon() {
-        InteractiveGameSession session = newGame("s\no\nf\na");
+        InteractiveGameSession session = newGame("s\no\nf\na\nn");
 
         session.playIndefinitely();
 
@@ -47,7 +47,8 @@ public class InteractiveGameSessionTest {
                 "so** Attempts left: 7. Used letters: s, o\n" +
                 "sof* Attempts left: 7. Used letters: s, o, f\n" +
                 "sofa Attempts left: 7. Used letters: s, o, f, a\n" +
-                "Congratulation, you won the game. The secret word: \"sofa\"\n";
+                "Congratulation, you won the game. The secret word: \"sofa\"\n" +
+                "Play again? (y/n)\n";
 
         assertEquals(expectedOutput, getOutput());
     }
@@ -75,7 +76,8 @@ public class InteractiveGameSessionTest {
                 "**** Attempts left: 1. Used letters: z, x, c, q, e, r\n" +
                 "**** Attempts left: 0. Used letters: z, x, c, q, e, r, i\n" +
                 "You have lost the game" +
-                ". The secret word: \"sofa\"\n";
+                ". The secret word: \"sofa\"\n" +
+                "Play again? (y/n)\n";
 
         assertEquals(expectedOutput, getOutput());
     }
@@ -87,6 +89,7 @@ public class InteractiveGameSessionTest {
                 "o\n" +
                 "f\n" +
                 "a\n" +
+                "y\n" +
                 "s\n" +
                 "o\n" +
                 "f\n" +
@@ -95,19 +98,20 @@ public class InteractiveGameSessionTest {
         session.playIndefinitely();
 
         //language=TEXT
-        String expectedOutput =
+        String expectedOutput = "****\n" +
+                "s*** Attempts left: 7. Used letters: s\n" +
+                "so** Attempts left: 7. Used letters: s, o\n" +
+                "sof* Attempts left: 7. Used letters: s, o, f\n" +
+                "sofa Attempts left: 7. Used letters: s, o, f, a\n" +
+                "Congratulation, you won the game. The secret word: \"sofa\"\n" +
+                "Play again? (y/n)\n" +
                 "****\n" +
                 "s*** Attempts left: 7. Used letters: s\n" +
                 "so** Attempts left: 7. Used letters: s, o\n" +
                 "sof* Attempts left: 7. Used letters: s, o, f\n" +
                 "sofa Attempts left: 7. Used letters: s, o, f, a\n" +
                 "Congratulation, you won the game. The secret word: \"sofa\"\n" +
-                "****\n" +
-                "s*** Attempts left: 7. Used letters: s\n" +
-                "so** Attempts left: 7. Used letters: s, o\n" +
-                "sof* Attempts left: 7. Used letters: s, o, f\n" +
-                "sofa Attempts left: 7. Used letters: s, o, f, a\n" +
-                "Congratulation, you won the game. The secret word: \"sofa\"\n";
+                "Play again? (y/n)\n";
 
         assertEquals(expectedOutput, getOutput());
     }
