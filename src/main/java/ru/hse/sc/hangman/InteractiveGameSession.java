@@ -52,8 +52,13 @@ public class InteractiveGameSession {
         Hangman hangman = new Hangman(randomWord());
         output.println(hangman.getMaskedWord());
         while (scanner.hasNext()) {
-            String next = scanner.next();
-            hangman.guessLetter(next.charAt(0));
+            String enteredString = scanner.next();
+            if (enteredString.length() != 1) {
+                output.println("Please enter one letter");
+                continue;
+            }
+
+            hangman.guessLetter(enteredString.charAt(0));
             output.println(hangman.getMaskedWord() +
                     " Attempts left: " + hangman.getAttemptsLeft() +
                     ". Used letters: " + joinLetters(hangman.getUsedLetters()));

@@ -116,6 +116,16 @@ public class InteractiveGameSessionTest {
         assertEquals(expectedOutput, getOutput());
     }
 
+    @Test
+    void onlyOneLetterConsidered() {
+        InteractiveGameSession gameSession = newGame("sofa");
+        gameSession.playIndefinitely();
+
+        String expected = "****\n" +
+                "Please enter one letter\n";
+        assertEquals(expected, getOutput());
+    }
+
     private String getOutput() {
         return outputBytes.toString(StandardCharsets.UTF_8);
     }
